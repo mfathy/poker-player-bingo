@@ -47,8 +47,8 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         return when {
-            hasStrongHand || hasStraight || hasPair || bluffCity -> {
-                println("Raising: $hasStrongHand, $hasStraight, $hasPair, $bluffCity")
+            hasStraight || hasPair || bluffCity -> {
+                println("Raising: $hasStraight, $hasPair, $bluffCity")
                 val raise = callAmount + gameState.minimumRaise
                 return when {
                     currentPlayer.bet > HIGH_BET -> callAmount
@@ -57,7 +57,7 @@ class Player {
                     else -> raise
                 }
             }
-            (badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL -> {
+            !hasStrongHand && (badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL -> {
                 println("Folding: $badHand, $callAmount")
                 0
             }
