@@ -24,11 +24,11 @@ class Player {
         return when {
             hasStrongHand -> {
                 // Strong hand: Raise more than the minimum raise
-                gameState.currentBuyIn + gameState.minimumRaise
+                callAmount + gameState.minimumRaise
             }
             Random.nextDouble() < bluffProbability -> {
                 // Bluff: Randomly raise even with a weak hand
-                gameState.currentBuyIn + gameState.minimumRaise * 2
+                callAmount + gameState.minimumRaise
             }
             currentPlayer.stack!! > callAmount -> {
                 // Regular call if we can afford it
