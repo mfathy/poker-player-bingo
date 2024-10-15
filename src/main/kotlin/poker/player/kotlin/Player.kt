@@ -8,6 +8,7 @@ import kotlin.random.Random
 const val MIN_GOOD_HAND = 100
 const val HIGH_BET = 300
 const val MAX_CALL = 200
+const val SMALL_CALL = 10
 
 class Player {
     fun betRequest(gameState: GameState): Int {
@@ -47,6 +48,7 @@ class Player {
 
         return when {
             hasStrongHand || hasStraight || hasPair || bluffCity -> {
+                println("Raising: $hasStrongHand, $hasStraight, $hasPair, $bluffCity")
                 val raise = callAmount + gameState.minimumRaise
                 return when {
                     currentPlayer.bet > HIGH_BET -> callAmount
@@ -55,7 +57,8 @@ class Player {
                     else -> raise
                 }
             }
-            badHand || callAmount > MAX_CALL -> {
+            (badHand && callAmount < SMALL_CALL) || callAmount > MAX_CALL -> {
+                println("Folding: $badHand, $callAmount")
                 0
             }
             else -> {
@@ -84,9 +87,6 @@ class Player {
     private fun hasStraight(cards: List<Int>?, numberOfCards: Int): Boolean {
         if (cards.isNullOrEmpty()) return false
         if (cards.size < numberOfCards) return false
-
-        // Validate that all cards are within the range of 1 to 13 (standard poker card values)
-        if (cards.any { it !in 1..13 }) throw IllegalArgumentException("Card values must be between 1 and 13")
 
         // Sort and remove duplicates
         val sortedCards = cards.toSet().sorted()
