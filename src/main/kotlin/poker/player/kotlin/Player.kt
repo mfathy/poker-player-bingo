@@ -57,7 +57,7 @@ class Player {
                     else -> raise
                 }
             }
-            (badHand && callAmount < SMALL_CALL) || callAmount > MAX_CALL -> {
+            (badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL -> {
                 println("Folding: $badHand, $callAmount")
                 0
             }
