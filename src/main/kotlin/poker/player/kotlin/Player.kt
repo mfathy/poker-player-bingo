@@ -10,12 +10,26 @@ class Player {
 
         val callBet = gameState.currentBuyIn - ourPlayer.bet
 
-        if (ourPlayer.holeCards!![0].rank != ourPlayer.holeCards[1].rank) {
+        if (!hasPair(gameState)) {
             return if (gameState.currentBuyIn > MAX_BET) 0 else callBet
         }
 
         val raiseBet = callBet + 2 * gameState.minimumRaise
         return raiseBet
+    }
+
+    fun hasPair(gameState: GameState): Boolean {
+        val cardRanks = mutableListOf<String>()
+        val ourPlayer = gameState.players[gameState.inAction]
+
+        ourPlayer.holeCards?.forEach() { card ->
+            cardRanks.add(card.rank )
+        }
+
+        val cardRanksSet = cardRanks.toSet()
+
+        return cardRanks.size > cardRanksSet.size
+
     }
 
     fun showdown() {

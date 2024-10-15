@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Card(
     @SerialName("rank")
-    val rank: String?,
+    val rank: String,
 
     @SerialName("suit")
-    val suit: String?
+    val suit: String
 )
