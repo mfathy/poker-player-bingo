@@ -6,6 +6,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 const val MIN_GOOD_HAND = 100
+const val HIGH_BET = 300
 
 class Player {
     fun betRequest(gameState: GameState): Int {
@@ -44,9 +45,10 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         return when {
-            hasStrongHand || hasPair || bluffCity -> {
-                val raise = callAmount + 2 * gameState.minimumRaise
+            hasStrongHand || hasStraight || hasPair || bluffCity -> {
+                val raise = callAmount + gameState.minimumRaise
                 return when {
+                    currentPlayer.bet > HIGH_BET -> callAmount
                     raise > currentPlayer.stack!! -> currentPlayer.stack
                     raise + currentPlayer.bet < MIN_GOOD_HAND -> MIN_GOOD_HAND - currentPlayer.bet
                     else -> raise
