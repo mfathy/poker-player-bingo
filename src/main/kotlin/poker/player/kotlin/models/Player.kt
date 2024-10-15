@@ -9,7 +9,7 @@ data class Player(
     @SerialName("bet")
     val bet: Int,
     @SerialName("hole_cards")
-    val holeCards: List<Card?>?,
+    val holeCards: List<Card>?,
     @SerialName("id")
     val id: Int?,
     @SerialName("name")

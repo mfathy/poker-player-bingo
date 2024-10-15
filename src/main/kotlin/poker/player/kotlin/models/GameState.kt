@@ -20,7 +20,7 @@ data class GameState(
     @SerialName("in_action")
     val inAction: Int,
     @SerialName("minimum_raise")
-    val minimumRaise: Int?,
+    val minimumRaise: Int,
     @SerialName("orbits")
     val orbits: Int?,
     @SerialName("players")
