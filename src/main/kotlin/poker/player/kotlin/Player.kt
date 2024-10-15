@@ -2,9 +2,10 @@ package poker.player.kotlin
 
 import models.Card
 import models.GameState
+import kotlin.math.min
 import kotlin.random.Random
 
-const val MAX_BET = 1000
+const val MIN_GOOD_HAND = 100
 
 class Player {
     fun betRequest(gameState: GameState): Int {
@@ -22,8 +23,6 @@ class Player {
             card.rank in strongCards
         } ?: false
 
-        val hasPairInHand = currentPlayer.holeCards?.map { card -> card.rank }?.toSet()?.size == 1
-
         val copyCards = currentPlayer.holeCards?.toMutableList()
         copyCards?.addAll(gameState.communityCards)
         val allCardsCount = copyCards?.map { card: Card ->
@@ -36,22 +35,19 @@ class Player {
 
         val hasPair = allCardsCount != allCardsAsSetCount
 
+        val bluffCity = Random.nextDouble(0.0, 1.0) < bluffProbability
+
         return when {
-            hasStrongHand || hasPairInHand || hasPair -> {
-                // Strong hand: Raise more than the minimum raise
-                callAmount + gameState.minimumRaise
-            }
-            Random.nextDouble(0.0, 1.0) < bluffProbability -> {
-                // Bluff: Randomly raise even with a weak hand
-                callAmount + gameState.minimumRaise
-            }
-            currentPlayer.stack!! > callAmount -> {
-                // Regular call if we can afford it
-                callAmount
+            hasStrongHand || hasPair || bluffCity -> {
+                val raise = callAmount + 2 * gameState.minimumRaise
+                return when {
+                    raise > currentPlayer.stack!! -> currentPlayer.stack
+                    raise + currentPlayer.bet < MIN_GOOD_HAND -> MIN_GOOD_HAND - currentPlayer.bet
+                    else -> raise
+                }
             }
             else -> {
-                // Fold (bet 0) if we can't meet the call
-                0
+                min(callAmount, currentPlayer.stack!!)
             }
         }
     }
