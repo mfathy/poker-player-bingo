@@ -65,8 +65,9 @@ class Player {
 
     private fun isBadHand(holeCards: List<Card>?): Boolean {
         val (a, b) = holeCards!!.map { card -> rankToInt(card.rank) }
+        val (aSuit, bSuit) = holeCards.map { card -> card.suit }
 
-        return  (a in 5..11 && b in 2 .. 7) || (b in 5..11 && a in 2 .. 7)
+        return  (a != b) && (aSuit != bSuit) && ((a in 5..11 && b in 2 .. 7) || (b in 5..11 && a in 2 .. 7))
     }
 
     private fun rankToInt(rank: String): Int {
