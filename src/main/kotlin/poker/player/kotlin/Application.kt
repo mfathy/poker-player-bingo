@@ -27,9 +27,9 @@ fun main() {
                         if (gameStateStr == null) {
                             "Missing game_state!"
                         } else {
-                            "100"
-//                            val gameState = Json.decodeFromString<GameState>(gameStateStr)
-//                            player.betRequest(gameState).toString()
+//                            "100"
+                            val gameState = Json.decodeFromString<GameState>(gameStateStr)
+                            player.betRequest(gameState).toString()
                         }
                     }
 
