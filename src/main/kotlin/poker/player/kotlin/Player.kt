@@ -37,6 +37,8 @@ class Player {
 
         val bluffCity = Random.nextDouble(0.0, 1.0) < bluffProbability
 
+//        val badHand = currentPlayer.holeCards?.map { card -> rankToInt(card.rank) }?.sorted()
+
         return when {
             hasStrongHand || hasPair || bluffCity -> {
                 val raise = callAmount + 2 * gameState.minimumRaise
@@ -46,9 +48,22 @@ class Player {
                     else -> raise
                 }
             }
+//            badHand -> {
+//                0
+//            }
             else -> {
                 min(callAmount, currentPlayer.stack!!)
             }
+        }
+    }
+
+    fun rankToInt(rank: String): Int {
+        return when(rank) {
+            "J" -> 11
+            "Q" -> 12
+            "K" -> 13
+            "A" -> 14
+            else -> rank.toInt()
         }
     }
 
