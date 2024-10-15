@@ -21,8 +21,10 @@ class Player {
             card.rank in strongCards
         } ?: false
 
+        val hasPairInHand = currentPlayer.holeCards?.map { card -> card.rank }?.toSet()?.size == 1
+
         return when {
-            hasStrongHand -> {
+            hasStrongHand || hasPairInHand -> {
                 // Strong hand: Raise more than the minimum raise
                 callAmount + gameState.minimumRaise
             }
