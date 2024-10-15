@@ -7,6 +7,8 @@ import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json
+import models.GameState
 import org.json.JSONObject
 
 fun main() {
@@ -20,13 +22,13 @@ fun main() {
                 val formParameters = call.receiveParameters()
                 val result = when (val action = formParameters["action"].toString()) {
                     "bet_request" -> {
-                        val gameState = formParameters["game_state"]
+                        val gameStateStr = formParameters["game_state"]
 
-                        if (gameState == null) {
+                        if (gameStateStr == null) {
                             "Missing game_state!"
                         } else {
-                            val json = JSONObject(gameState)
-                            player.betRequest(json).toString()
+                            val gameState = Json.decodeFromString<GameState>(gameStateStr)
+                            player.betRequest(gameState).toString()
                         }
                     }
 

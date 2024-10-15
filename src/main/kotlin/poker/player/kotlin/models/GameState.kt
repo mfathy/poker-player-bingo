@@ -18,9 +18,9 @@ data class GameState(
     @SerialName("game_id")
     val gameId: String?,
     @SerialName("in_action")
-    val inAction: Int?,
+    val inAction: Int? = null,
     @SerialName("minimum_raise")
-    val minimumRaise: Int?,
+    val minimumRaise: Int? = null,
     @SerialName("orbits")
     val orbits: Int?,
     @SerialName("players")

@@ -1,9 +1,10 @@
 package poker.player.kotlin
 
-import org.json.JSONObject
+import models.GameState
 
 class Player {
-    fun betRequest(game_state: JSONObject): Int {
+    fun betRequest(gameState: GameState): Int {
+        println(gameState.toString())
         return 0
     }
 
