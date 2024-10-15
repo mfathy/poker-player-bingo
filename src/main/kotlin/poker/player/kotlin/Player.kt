@@ -37,7 +37,7 @@ class Player {
 
         val bluffCity = Random.nextDouble(0.0, 1.0) < bluffProbability
 
-        val badHand = currentPlayer.holeCards?.map { card -> rankToInt(card.rank) }?.sorted()
+        val badHand = isBadHand(currentPlayer.holeCards)
 
         val straightCards = copyCards?.map { card -> rankToInt(card.rank) }?.sorted()
 
@@ -52,16 +52,22 @@ class Player {
                     else -> raise
                 }
             }
-//            badHand -> {
-//                0
-//            }
+            badHand -> {
+                0
+            }
             else -> {
                 min(callAmount, currentPlayer.stack!!)
             }
         }
     }
 
-    fun rankToInt(rank: String): Int {
+    private fun isBadHand(holeCards: List<Card>?): Boolean {
+        val (a, b) = holeCards!!.map { card -> rankToInt(card.rank) }
+
+        return  (a in 5..11 && b in 2 .. 7) || (b in 5..11 && a in 2 .. 7)
+    }
+
+    private fun rankToInt(rank: String): Int {
         return when(rank) {
             "J" -> 11
             "Q" -> 12
