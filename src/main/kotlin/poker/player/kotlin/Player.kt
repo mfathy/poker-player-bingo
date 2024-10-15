@@ -1,5 +1,6 @@
 package poker.player.kotlin
 
+import models.Card
 import models.GameState
 import kotlin.random.Random
 
@@ -23,8 +24,20 @@ class Player {
 
         val hasPairInHand = currentPlayer.holeCards?.map { card -> card.rank }?.toSet()?.size == 1
 
+        val copyCards = currentPlayer.holeCards?.toMutableList()
+        copyCards?.addAll(gameState.communityCards)
+        val allCardsCount = copyCards?.map { card: Card ->
+            card.rank
+        }?.toList()?.count()
+
+        val allCardsAsSetCount = copyCards?.map { card: Card ->
+            card.rank
+        }?.toSet()?.count()
+
+        val hasPair = allCardsCount != allCardsAsSetCount
+
         return when {
-            hasStrongHand || hasPairInHand -> {
+            hasStrongHand || hasPairInHand || hasPair -> {
                 // Strong hand: Raise more than the minimum raise
                 callAmount + gameState.minimumRaise
             }
