@@ -12,19 +12,19 @@ data class GameState(
     @SerialName("community_cards")
     val communityCards: List<Card?>?,
     @SerialName("current_buy_in")
-    val currentBuyIn: Int?,
+    val currentBuyIn: Int,
     @SerialName("dealer")
     val dealer: Int?,
     @SerialName("game_id")
     val gameId: String?,
     @SerialName("in_action")
-    val inAction: Int? = null,
+    val inAction: Int,
     @SerialName("minimum_raise")
-    val minimumRaise: Int? = null,
+    val minimumRaise: Int?,
     @SerialName("orbits")
     val orbits: Int?,
     @SerialName("players")
-    val players: List<Player?>?,
+    val players: List<Player>,
     @SerialName("pot")
     val pot: Int?,
     @SerialName("round")

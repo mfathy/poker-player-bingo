@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Player(
     @SerialName("bet")
-    val bet: Int?,
+    val bet: Int,
     @SerialName("hole_cards")
     val holeCards: List<Card?>?,
     @SerialName("id")
