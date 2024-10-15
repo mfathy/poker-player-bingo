@@ -23,7 +23,11 @@ class Player {
         val ourPlayer = gameState.players[gameState.inAction]
 
         ourPlayer.holeCards?.forEach() { card ->
-            cardRanks.add(card.rank )
+            cardRanks.add(card.rank)
+        }
+
+        gameState.communityCards.forEach() { card ->
+            cardRanks.add(card.rank)
         }
 
         val cardRanksSet = cardRanks.toSet()

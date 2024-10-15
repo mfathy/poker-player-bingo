@@ -10,7 +10,7 @@ data class GameState(
     val betIndex: Int?,
 
     @SerialName("community_cards")
-    val communityCards: List<Card?>?,
+    val communityCards: List<Card>,
     @SerialName("current_buy_in")
     val currentBuyIn: Int,
     @SerialName("dealer")
