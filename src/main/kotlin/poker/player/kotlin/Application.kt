@@ -11,6 +11,8 @@ import kotlinx.serialization.json.Json
 import models.GameState
 import org.json.JSONObject
 
+private val sharedJson = Json { ignoreUnknownKeys = true }
+
 fun main() {
     val player = Player()
     embeddedServer(Netty, getPort()) {
@@ -28,7 +30,7 @@ fun main() {
                             "Missing game_state!"
                         } else {
 //                            "100"
-                            val gameState = Json.decodeFromString<GameState>(gameStateStr)
+                            val gameState = sharedJson.decodeFromString<GameState>(gameStateStr)
                             player.betRequest(gameState).toString()
                         }
                     }
