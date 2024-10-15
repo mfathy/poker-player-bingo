@@ -26,23 +26,13 @@ class Player {
             card.rank in strongCards
         } ?: false
 
-        val copyCards = currentPlayer.holeCards?.toMutableList()
-        copyCards?.addAll(gameState.communityCards)
-        val allCardsCount = copyCards?.map { card: Card ->
-            card.rank
-        }?.toList()?.count()
-
-        val allCardsAsSetCount = copyCards?.map { card: Card ->
-            card.rank
-        }?.toSet()?.count()
-
-        val hasPair = allCardsCount != allCardsAsSetCount
+        val hasPair = hasPair(currentPlayer.holeCards, gameState.communityCards)
 
         val bluffCity = Random.nextDouble(0.0, 1.0) < bluffProbability
 
         val badHand = isBadHand(currentPlayer.holeCards)
 
-        val straightCards = copyCards?.map { card -> rankToInt(card.rank) }?.sorted()
+        val straightCards = currentPlayer.holeCards?.map { card -> rankToInt(card.rank) }?.sorted()
 
         val hasStraight = hasStraight(straightCards, 5)
 
@@ -65,6 +55,16 @@ class Player {
                 min(callAmount, currentPlayer.stack!!)
             }
         }
+    }
+
+    private fun hasPair(holeCards: List<Card>?, communityCards: List<Card>?): Boolean {
+        val holeRanks = holeCards?.map { card -> card.rank }!!
+
+        val pairInHole = holeRanks[0] == holeRanks[1]
+
+        val communityCardsPairUp = communityCards?.any { card -> card.rank in holeRanks }!!
+
+        return pairInHole || communityCardsPairUp
     }
 
     private fun isBadHand(holeCards: List<Card>?): Boolean {
