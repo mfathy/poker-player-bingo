@@ -28,7 +28,7 @@ class Player {
                 // Strong hand: Raise more than the minimum raise
                 callAmount + gameState.minimumRaise
             }
-            Random.nextDouble() < bluffProbability -> {
+            Random.nextDouble(0.0, 1.0) < bluffProbability -> {
                 // Bluff: Randomly raise even with a weak hand
                 callAmount + gameState.minimumRaise
             }
