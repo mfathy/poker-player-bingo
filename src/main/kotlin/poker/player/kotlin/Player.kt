@@ -7,6 +7,7 @@ import kotlin.random.Random
 
 const val MIN_GOOD_HAND = 100
 const val HIGH_BET = 300
+const val MAX_CALL = 200
 
 class Player {
     fun betRequest(gameState: GameState): Int {
@@ -54,7 +55,7 @@ class Player {
                     else -> raise
                 }
             }
-            badHand -> {
+            badHand || callAmount > MAX_CALL -> {
                 0
             }
             else -> {
