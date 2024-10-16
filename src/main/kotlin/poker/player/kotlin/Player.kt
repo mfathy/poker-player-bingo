@@ -36,7 +36,7 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         return when {
-            earlyFold(currentPlayer.holeCards ?: emptyList(), gameState.communityCards, currentPlayer.bet, callAmount) -> {
+            earlyFold(currentPlayer.holeCards ?: emptyList(), gameState.communityCards) -> {
                 println("Early fold: ${currentPlayer.bet}, $callAmount")
                 0
             }
@@ -60,8 +60,8 @@ class Player {
         }
     }
 
-    private fun earlyFold(holeCards: List<Card>, communityCards: List<Card>, currentBet: Int, callAmount: Int): Boolean {
-        return isBadHand(holeCards) && communityCards.isEmpty() && (currentBet == 0 || callAmount > SMALL_CALL)
+    private fun earlyFold(holeCards: List<Card>, communityCards: List<Card>): Boolean {
+        return isBadHand(holeCards) && communityCards.isEmpty()
     }
 
     private fun hasPair(holeCards: List<Card>?, communityCards: List<Card>?): Boolean {
