@@ -27,7 +27,9 @@ class Player {
 
         val hasPair = hasPair(currentPlayer.holeCards, gameState.communityCards)
 
-        val bluffCity = gameState.communityCards.size >= 4 && Random(gameState.gameId.hashCode()).nextDouble(0.0, 1.0) < bluffProbability
+        val random = Random(gameState.gameId.hashCode())
+        val isBluff = gameState.communityCards.size >= 4 && random.nextDouble() < bluffProbability
+
 
         val badHand = isBadHand(currentPlayer.holeCards)
 
@@ -40,8 +42,8 @@ class Player {
                 println("Early fold: ${currentPlayer.bet}, $callAmount")
                 0
             }
-            hasStraight || hasPair || bluffCity -> {
-                println("Raising: $hasStraight, $hasPair, $bluffCity")
+            hasStraight || hasPair || isBluff -> {
+                println("Raising: $hasStraight, $hasPair, $isBluff")
                 val raise = callAmount + gameState.minimumRaise
                 return when {
                     currentPlayer.bet > HIGH_BET -> callAmount
@@ -65,11 +67,13 @@ class Player {
     }
 
     private fun hasPair(holeCards: List<Card>?, communityCards: List<Card>?): Boolean {
-        val holeRanks = holeCards?.map { card -> card.rank }!!
+        val holeRanks = holeCards?.map { it.rank } ?: return false
+
+        if (holeRanks.size < 2) return false  // Ensure at least two cards in holeCards
 
         val pairInHole = holeRanks[0] == holeRanks[1]
 
-        val communityCardsPairUp = communityCards?.any { card -> card.rank in holeRanks }!!
+        val communityCardsPairUp = communityCards?.any { card -> card.rank in holeRanks } ?: false
 
         return pairInHole || communityCardsPairUp
     }
