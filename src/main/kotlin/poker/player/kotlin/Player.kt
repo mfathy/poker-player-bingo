@@ -12,7 +12,6 @@ const val SMALL_CALL = 10
 
 class Player {
     fun betRequest(gameState: GameState): Int {
-
         if (gameState.inAction == null) return 0
         if (gameState.minimumRaise == null) return 0
 
@@ -37,7 +36,7 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         return when {
-            badHand && gameState.communityCards.isEmpty() && (currentPlayer.bet == 0 || callAmount > SMALL_CALL) -> {
+            earlyFold(currentPlayer.holeCards ?: emptyList(), gameState.communityCards, currentPlayer.bet, callAmount) -> {
                 println("Early fold: ${currentPlayer.bet}, $callAmount")
                 0
             }
@@ -59,6 +58,10 @@ class Player {
                 min(callAmount, currentPlayer.stack!!)
             }
         }
+    }
+
+    private fun earlyFold(holeCards: List<Card>, communityCards: List<Card>, currentBet: Int, callAmount: Int): Boolean {
+        return isBadHand(holeCards) && communityCards.isEmpty() && (currentBet == 0 || callAmount > SMALL_CALL)
     }
 
     private fun hasPair(holeCards: List<Card>?, communityCards: List<Card>?): Boolean {
