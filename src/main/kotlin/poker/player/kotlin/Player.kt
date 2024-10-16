@@ -38,6 +38,7 @@ class Player {
 
         val stack = currentPlayer.stack ?: 0
         val holeCards = currentPlayer.holeCards ?: emptyList()
+        val hasOwnFlush = hasOwnFlush(holeCards, gameState.communityCards)
 
         return when {
             gameState.orbits == 0 && isBadHand(holeCards) -> {
@@ -52,7 +53,7 @@ class Player {
                     Position.MIDDLE, Position.LATE -> if (pairValue > 7) goodRaise else callAmount
                 }
             }
-            hasStraight || hasPair || isBluff -> {
+            hasOwnFlush || hasStraight || hasPair || isBluff -> {
                 val raise = callAmount + gameState.minimumRaise
                 val action = when {
                     currentPlayer.bet > HIGH_BET -> callAmount
@@ -75,6 +76,16 @@ class Player {
                 min(callAmount, stack)
             }
         }
+    }
+
+    private fun hasOwnFlush(holeCards: List<Card>, communityCards: List<Card>): Boolean {
+        val allCards = holeCards + communityCards
+
+        val suitCounts: Map<String, Int> = allCards.groupBy { card -> card.suit }.mapValues { entry -> entry.value.size }
+
+        val flushSuitMaybe = suitCounts.firstNotNullOfOrNull { entry -> if (entry.value >= 5) entry.key else null }
+
+        return flushSuitMaybe != null && holeCards.any { card -> card.suit == flushSuitMaybe }
     }
 
     private fun pairValue(holeCards: List<Card>): Int {
