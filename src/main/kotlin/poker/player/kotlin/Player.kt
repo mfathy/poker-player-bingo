@@ -37,6 +37,10 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         return when {
+            badHand && gameState.communityCards.isEmpty() && (currentPlayer.bet == 0 || callAmount > SMALL_CALL) -> {
+                println("Early fold: ${currentPlayer.bet}, $callAmount")
+                0
+            }
             hasStraight || hasPair || bluffCity -> {
                 println("Raising: $hasStraight, $hasPair, $bluffCity")
                 val raise = callAmount + gameState.minimumRaise
