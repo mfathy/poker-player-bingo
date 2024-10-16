@@ -79,11 +79,17 @@ class Player {
     }
 
     private fun isBadHand(holeCards: List<Card>?): Boolean {
-        val (a, b) = holeCards!!.map { card -> rankToInt(card.rank) }
-        val (aSuit, bSuit) = holeCards.map { card -> card.suit }
+        // Check for null or invalid number of cards
+        if (holeCards == null || holeCards.size < 2) return false
 
-        return  (a != b) && (aSuit != bSuit) && ((a in 5..11 && b in 2 .. 7) || (b in 5..11 && a in 2 .. 7))
+        val (a, b) = holeCards.map { rankToInt(it.rank) }
+        val (aSuit, bSuit) = holeCards.map { it.suit }
+
+        // Return if cards are different in rank and suit, and fall within specific ranges
+        return a != b && aSuit != bSuit &&
+                ((a in 5..11 && b in 2..7) || (b in 5..11 && a in 2..7))
     }
+
 
     private fun rankToInt(rank: String): Int {
         return when(rank) {
