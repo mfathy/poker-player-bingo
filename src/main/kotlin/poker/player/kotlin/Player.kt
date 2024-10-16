@@ -42,16 +42,18 @@ class Player {
 
         return when {
             gameState.orbits == 0 && isBadHand(holeCards) -> {
-                println("Early fold: ${currentPlayer.bet}, $callAmount")
+                println("[${gameState.gameId}] fold: ${currentPlayer.bet}, $callAmount")
                 0
             }
             gameState.orbits == 0 && hasPair -> {
                 val goodRaise = min(stack - currentPlayer.bet, 200) - currentPlayer.bet
                 val pairValue = pairValue(holeCards)
-                when(ourPosition(gameState)) {
+                val action = when(ourPosition(gameState)) {
                     Position.EARLY -> if (pairValue > 10) goodRaise else callAmount
                     Position.MIDDLE, Position.LATE -> if (pairValue > 7) goodRaise else callAmount
                 }
+                println("[${gameState.gameId}] earlyPair: ${currentPlayer.bet}, $action")
+                action
             }
             hasOwnFlush || hasStraight || hasPair || isBluff -> {
                 val raise = callAmount + gameState.minimumRaise
@@ -61,18 +63,19 @@ class Player {
                     raise + currentPlayer.bet < MIN_GOOD_HAND -> MIN_GOOD_HAND - currentPlayer.bet
                     else -> raise
                 }
-                println("Raising: $hasStraight, $hasPair, $isBluff; $callAmount, $stack, $raise; $action")
+                println("[${gameState.gameId}] Raising: $hasStraight, $hasPair, $isBluff; $callAmount, $stack, $raise; $action")
                 return action
             }
             !hasStrongHand && ((badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL) -> {
-                println("Folding: $badHand, $callAmount")
+                println("[${gameState.gameId}] Folding: $badHand, $callAmount")
                 0
             }
             callAmount > 200 -> {
-                println("Folding, too much money: $callAmount")
+                println("[${gameState.gameId}] Folding, too much money: $callAmount")
                 0
             }
             else -> {
+                println("[${gameState.gameId}] Calling")
                 min(callAmount, stack)
             }
         }

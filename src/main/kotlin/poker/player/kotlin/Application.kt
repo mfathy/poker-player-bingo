@@ -31,7 +31,9 @@ fun main() {
                         } else {
 //                            "100"
                             val gameState = sharedJson.decodeFromString<GameState>(gameStateStr)
-                            player.betRequest(gameState).toString()
+                            val resp = player.betRequest(gameState).toString()
+                            println("[${gameState.gameId}] response: $resp")
+                            resp
                         }
                     }
 
