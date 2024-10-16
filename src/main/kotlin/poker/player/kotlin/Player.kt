@@ -69,7 +69,7 @@ class Player {
                 0
             }
             callAmount > 200 -> {
-                print("Folding, too much money: $callAmount")
+                println("Folding, too much money: $callAmount")
                 0
             }
             else -> {
