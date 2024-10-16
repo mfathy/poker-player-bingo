@@ -28,7 +28,7 @@ class Player {
 
         val hasPair = hasPair(currentPlayer.holeCards, gameState.communityCards)
 
-        val bluffCity = Random.nextDouble(0.0, 1.0) < bluffProbability
+        val bluffCity = gameState.communityCards.size >= 4 && Random(gameState.gameId.hashCode()).nextDouble(0.0, 1.0) < bluffProbability
 
         val badHand = isBadHand(currentPlayer.holeCards)
 
@@ -47,7 +47,7 @@ class Player {
                     else -> raise
                 }
             }
-            !hasStrongHand && (badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL -> {
+            !hasStrongHand && ((badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL) -> {
                 println("Folding: $badHand, $callAmount")
                 0
             }
