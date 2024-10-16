@@ -37,6 +37,8 @@ class Player {
 
         val hasStraight = hasStraight(straightCards, 5)
 
+        val stack = currentPlayer.stack ?: 0
+
         return when {
             earlyFold(currentPlayer.holeCards ?: emptyList(), gameState.communityCards) -> {
                 println("Early fold: ${currentPlayer.bet}, $callAmount")
@@ -47,7 +49,7 @@ class Player {
                 val raise = callAmount + gameState.minimumRaise
                 return when {
                     currentPlayer.bet > HIGH_BET -> callAmount
-                    raise > currentPlayer.stack!! -> currentPlayer.stack
+                    raise > stack -> stack
                     raise + currentPlayer.bet < MIN_GOOD_HAND -> MIN_GOOD_HAND - currentPlayer.bet
                     else -> raise
                 }
@@ -57,7 +59,7 @@ class Player {
                 0
             }
             else -> {
-                min(callAmount, currentPlayer.stack!!)
+                min(callAmount, stack)
             }
         }
     }
