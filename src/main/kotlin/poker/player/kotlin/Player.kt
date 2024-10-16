@@ -53,14 +53,15 @@ class Player {
                 }
             }
             hasStraight || hasPair || isBluff -> {
-                println("Raising: $hasStraight, $hasPair, $isBluff")
                 val raise = callAmount + gameState.minimumRaise
-                return when {
+                val action = when {
                     currentPlayer.bet > HIGH_BET -> callAmount
                     raise > stack -> stack
                     raise + currentPlayer.bet < MIN_GOOD_HAND -> MIN_GOOD_HAND - currentPlayer.bet
                     else -> raise
                 }
+                println("Raising: $hasStraight, $hasPair, $isBluff; $callAmount, $stack, $raise; $action")
+                return action
             }
             !hasStrongHand && ((badHand && callAmount > SMALL_CALL) || callAmount > MAX_CALL) -> {
                 println("Folding: $badHand, $callAmount")
