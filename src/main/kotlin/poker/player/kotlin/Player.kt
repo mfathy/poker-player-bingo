@@ -32,12 +32,11 @@ class Player {
 
         val badHand = isBadHand(currentPlayer.holeCards)
 
-        val straightCards = currentPlayer.holeCards?.map { card -> rankToInt(card.rank) }?.sorted()
+        val holeCards = currentPlayer.holeCards ?: emptyList()
 
-        val hasStraight = hasStraight(straightCards, 5)
+        val hasStraight = hasStraight(holeCards, gameState.communityCards)
 
         val stack = currentPlayer.stack ?: 0
-        val holeCards = currentPlayer.holeCards ?: emptyList()
         val hasOwnFlush = hasOwnFlush(holeCards, gameState.communityCards)
 
         return when {
@@ -135,43 +134,29 @@ class Player {
         }
     }
 
-    private fun hasStraight(cards: List<Int>?, numberOfCards: Int): Boolean {
-        if (cards.isNullOrEmpty()) return false
-        if (cards.size < numberOfCards) return false
+    private fun hasStraight(holeCards: List<Card>, communityCards: List<Card>): Boolean {
+        if (communityCards.size < 3) return false // Impossible to straight before 3 cards
 
         // Sort and remove duplicates
-        val sortedCards = cards.toSet().sorted()
+        val sortedCards = (holeCards + communityCards).map { card -> rankToInt(card.rank) }.toSet().toList().sorted().toMutableList()
 
-        // Check for consecutive cards, considering Ace as both 1 and 14
+        // If we have an ace, also add a 1
+        if (sortedCards.last() == 14) sortedCards.apply { add(0, 1) }
+
         var consecutiveCount = 1
-        for (i in 1 until sortedCards.size) {
-            if (sortedCards[i] == sortedCards[i - 1] + 1) {
-                consecutiveCount++
-                if (consecutiveCount == numberOfCards) return true
+        var previousCard = sortedCards.removeFirst()
+        for (cardVal in sortedCards) {
+            if (cardVal == previousCard + 1) {
+                previousCard = cardVal
+                consecutiveCount += 1
+                if (consecutiveCount == 5) break;
             } else {
+                previousCard = cardVal
                 consecutiveCount = 1
             }
         }
 
-        // Special check for Ace being treated as 14
-        if (sortedCards.contains(1)) {
-            // Consider Ace as 14 and check for a straight from 10 to Ace
-            val aceAs14 = sortedCards.toMutableList()
-            aceAs14.add(14) // Treat Ace as 14
-            aceAs14.sort()
-
-            consecutiveCount = 1
-            for (i in 1 until aceAs14.size) {
-                if (aceAs14[i] == aceAs14[i - 1] + 1) {
-                    consecutiveCount++
-                    if (consecutiveCount == numberOfCards) return true
-                } else {
-                    consecutiveCount = 1
-                }
-            }
-        }
-
-        return false
+        return consecutiveCount >= 5
     }
 
     enum class Position { EARLY, MIDDLE, LATE }
