@@ -142,6 +142,24 @@ class Player {
         return false
     }
 
+    enum class Position { EARLY, MIDDLE, LATE }
+
+    private fun ourPosition(gameState: GameState): Position {
+        val inPlayers = gameState.players.filter { player -> player.status != "out" }
+        val playerCount = inPlayers.count()
+
+        val firstPlayerId = ((gameState.dealer ?: 0) + 1) % gameState.players.size
+        val ourId = gameState.inAction ?: 0
+
+        val ourRelativePosition = inPlayers.count { player -> player.id in firstPlayerId..ourId } - 1
+
+        return when {
+            ourRelativePosition < playerCount / 3 -> Position.EARLY
+            ourRelativePosition < 2 * playerCount / 3 -> Position.MIDDLE
+            else -> Position.LATE
+        }
+    }
+
 
 //    fun hasPair(gameState: GameState): Boolean {
 //        val cardRanks = mutableListOf<String>()
