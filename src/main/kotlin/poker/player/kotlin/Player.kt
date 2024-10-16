@@ -38,11 +38,16 @@ class Player {
         val hasStraight = hasStraight(straightCards, 5)
 
         val stack = currentPlayer.stack ?: 0
+        val holeCards = currentPlayer.holeCards ?: emptyList()
 
         return when {
-            earlyFold(currentPlayer.holeCards ?: emptyList(), gameState.communityCards) -> {
+            gameState.orbits == 0 && isBadHand(holeCards) -> {
                 println("Early fold: ${currentPlayer.bet}, $callAmount")
                 0
+            }
+            gameState.orbits == 0 && goodPair(holeCards) -> {
+                val desiredBet = min(currentPlayer.stack!! + currentPlayer.bet, 200)
+                desiredBet - currentPlayer.bet
             }
             hasStraight || hasPair || isBluff -> {
                 println("Raising: $hasStraight, $hasPair, $isBluff")
@@ -64,8 +69,10 @@ class Player {
         }
     }
 
-    private fun earlyFold(holeCards: List<Card>, communityCards: List<Card>): Boolean {
-        return isBadHand(holeCards) && communityCards.isEmpty()
+    private fun goodPair(holeCards: List<Card>): Boolean {
+        val holeRanksSet = holeCards.map { card -> card.rank }.toSet()
+
+        return holeRanksSet.size == 1 && rankToInt(holeRanksSet.first()) > 10
     }
 
     private fun hasPair(holeCards: List<Card>?, communityCards: List<Card>?): Boolean {
