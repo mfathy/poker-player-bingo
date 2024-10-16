@@ -67,6 +67,10 @@ class Player {
                 println("Folding: $badHand, $callAmount")
                 0
             }
+            callAmount > 200 -> {
+                print("Folding, too much money: $callAmount")
+                0
+            }
             else -> {
                 min(callAmount, stack)
             }
